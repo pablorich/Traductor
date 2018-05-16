@@ -1,0 +1,51 @@
+.386
+.model flat, stdcall
+option casemap:none
+	include \masm32\macros\macros.asm
+	include \masm32\include\masm32.inc
+	include \masm32\include\kernel32.inc
+	includelib \masm32\lib\masm32.lib
+	includelib \masm32\lib\kernel32.lib
+
+.data
+.data?
+.code
+inicio:
+
+push 5;
+pop a;
+push a;
+push 3;
+pop ebx;
+pop eax;
+add eax, ebx;
+push eax;
+pop b;
+push a;
+push 2;
+pop ebx;
+pop eax;
+add eax, ebx;
+push eax;
+pop eax
+print str$(eax),10;
+push 34;
+pop a;
+push 7;
+push 3;
+pop ebx;
+pop eax;
+add eax, ebx;
+push eax;
+pop c;
+push a;
+push 3;
+pop ebx;
+pop eax;
+add eax, ebx;
+push eax;
+pop eax
+print str$(eax),10;
+exit
+
+end inicio
