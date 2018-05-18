@@ -191,7 +191,7 @@ public:
             writeFile << ".data" << endl;
             //
             writeFile << ".data?" << endl;
-
+            writeFile << lista.listaEnteros();
             writeFile << ".code" << endl;
             writeFile << "inicio:" << endl << endl;
 

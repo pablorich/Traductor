@@ -1,6 +1,7 @@
 a = 5;
-b = a - 3;
+b = 2.3 - 3.22;
 print (a+2);
 a = 34;
 c = 7+3;
-print (a+3);
+print (c*3);
+print("Kappa");

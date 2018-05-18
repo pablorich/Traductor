@@ -123,6 +123,22 @@ public:
         }
     }
 
+    string listaEnteros()
+    {
+        stringstream s;
+        pActualID temp = root;
+        while(temp != NULL)
+        {
+            if(temp->getTipo() == 'i')
+            {
+                s << "_" << temp->getID() << " SDWORD ?" << endl;
+            }
+            temp = temp->siguiente;
+        }
+
+        return s.str();
+    }
+
 
 };
 

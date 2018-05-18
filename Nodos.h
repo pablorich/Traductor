@@ -168,7 +168,7 @@ public:
     string generaCodigo()
     {
         stringstream s;
-        s << "push "<< simbolo << ";" << endl;
+        s << "push _"<< simbolo << ";" << endl;
         return s.str();
     }
 
@@ -277,10 +277,10 @@ public:
         return s.str();
     }
 
-    string generaCodigo()
+    string generaCodigo()//Use getSimbolo() instead
     {
         stringstream s;
-        s << "push "<< simbolo << ";" << endl;
+        //s << "push "<< simbolo << ";" << endl;
         return s.str();
     }
 
@@ -323,12 +323,18 @@ public:
     string generaCodigo()
     {
         stringstream s;
-        s << izq->generaCodigo();
-        s << der->generaCodigo();
-        s << "pop ebx;" << endl;
-        s << "pop eax;" << endl;
-        s << "add eax, ebx;" << endl;
-        s << "push eax;" << endl;
+        if(tipo == 'i')
+        {
+            s << izq->generaCodigo();
+            s << der->generaCodigo();
+            s << "pop ebx;" << endl;
+            s << "pop eax;" << endl;
+            s << "add eax, ebx;" << endl;
+            s << "push eax;" << endl;
+        }
+        else
+            s << ";Solo acepta enteros" << endl;
+
         return s.str();
     }
 
@@ -433,12 +439,18 @@ public:
     string generaCodigo()
     {
         stringstream s;
-        s << izq->generaCodigo();
-        s << der->generaCodigo();
-        s << "pop ebx;" << endl;
-        s << "pop eax;" << endl;
-        s << "mul ebx;" << endl; //Check
-        s << "push eax;" << endl;
+        if(tipo == 'i')
+        {
+            s << izq->generaCodigo();
+            s << der->generaCodigo();
+            s << "pop ebx;" << endl;
+            s << "pop eax;" << endl;
+            s << "mul ebx;" << endl; //Check
+            s << "push eax;" << endl;
+        }
+        else
+            s << ";Solo acepta enteros" << endl;
+
         return s.str();
     }
 
@@ -611,8 +623,14 @@ public:
     string generaCodigo()
     {
         stringstream s;
-        s << der->generaCodigo();
-        s << "pop " << izq->getSimbolo() << ";" << endl;
+        if(tipo == 'i')//Asignación para enteros
+        {
+            s << der->generaCodigo();
+            s << "pop _" << izq->getSimbolo() << ";" << endl;
+        }
+        else //Empezar por aqui si se quieren integrar numeros reales o cadenas
+            s << ";Solo asigna enteros" << endl;
+
         return s.str();
     }
 
@@ -665,9 +683,17 @@ public:
     string generaCodigo()
     {
         stringstream s;
-        s << contenido->generaCodigo();
-        s << "pop eax" << endl;
-        s << "print str$(eax),10;" << endl;//Esto funciona si no es una cadena
+        if(tipo == 'i')
+        {
+            s << contenido->generaCodigo();
+            s << "pop eax" << endl;
+            s << "print str$(eax),10;" << endl;
+        }
+        else if(tipo == 'c')
+        {
+            s << "print chr$(" << contenido->getSimbolo() << "),10;" << endl;
+        }
+
         return s.str();
     }
 

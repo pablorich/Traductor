@@ -9,19 +9,15 @@ option casemap:none
 
 .data
 .data?
+_a SDWORD ?
+_c SDWORD ?
 .code
 inicio:
 
 push 5;
-pop a;
-push a;
-push 3;
-pop ebx;
-pop eax;
-add eax, ebx;
-push eax;
-pop b;
-push a;
+pop _a;
+;Solo asigna enteros
+push _a;
 push 2;
 pop ebx;
 pop eax;
@@ -30,22 +26,23 @@ push eax;
 pop eax
 print str$(eax),10;
 push 34;
-pop a;
+pop _a;
 push 7;
 push 3;
 pop ebx;
 pop eax;
 add eax, ebx;
 push eax;
-pop c;
-push a;
+pop _c;
+push _c;
 push 3;
 pop ebx;
 pop eax;
-add eax, ebx;
+mul ebx;
 push eax;
 pop eax
 print str$(eax),10;
+print chr$("Kappa"),10;
 exit
 
 end inicio
