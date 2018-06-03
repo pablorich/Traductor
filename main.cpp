@@ -7,10 +7,13 @@
 
 using namespace std;
 
+#include "util.h"
 #include "lista.h"
 Lista lista;
+int contadorIF = 0;
+int contadorWHILE = 0;
+int contadorDIV = 0;
 
-#include "util.h"
 #include "Sintactico.h"
 #include "ArbolSintactico.h"
 

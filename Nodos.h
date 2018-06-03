@@ -110,6 +110,11 @@ public:
         return tipo;
     }
 
+    virtual char dataType()
+    {
+        return 'E';
+    }
+
 };
 typedef Expresion *pExpresion;
 
@@ -189,6 +194,11 @@ public:
         return tipo;
     }
 
+    char dataType()
+    {
+        return 'o';
+    }
+
 };
 typedef Identificador *pID;
 
@@ -222,6 +232,11 @@ public:
     char getTipo()
     {
         return tipo;
+    }
+
+    char dataType()
+    {
+        return 'i';
     }
 
 };
@@ -259,6 +274,11 @@ public:
         return tipo;
     }
 
+    char dataType()
+    {
+        return 'i';
+    }
+
 };
 typedef Real *pReal;
 
@@ -294,6 +314,11 @@ public:
         return tipo;
     }
 
+    char dataType()
+    {
+        return 'i';
+    }
+
 };
 typedef Cadena *pCadena;
 
@@ -325,12 +350,26 @@ public:
         stringstream s;
         if(tipo == 'i')
         {
-            s << izq->generaCodigo();
-            s << der->generaCodigo();
-            s << "pop ebx;" << endl;
-            s << "pop eax;" << endl;
-            s << "add eax, ebx;" << endl;
-            s << "push eax;" << endl;
+            if(simbolo == "+")
+            {
+                s << izq->generaCodigo();
+                s << der->generaCodigo();
+                s << "pop ebx;" << endl;
+                s << "pop eax;" << endl;
+                s << "add eax, ebx;" << endl;
+                s << "push eax;" << endl;
+            }
+            else if(simbolo == "-")
+            {
+                s << izq->generaCodigo();
+                s << der->generaCodigo();
+                s << "pop ebx;" << endl;
+                s << "pop eax;" << endl;
+                s << "sub eax, ebx;" << endl;
+                s << "push eax;" << endl;
+            }
+            else
+                s << ";Operación desconocida" << endl;
         }
         else
             s << ";Solo acepta enteros" << endl;
@@ -362,6 +401,11 @@ public:
         return tipo;
     }
 
+    char dataType()
+    {
+        return 'o';
+    }
+
 };
 typedef Suma *pSuma;
 
@@ -386,7 +430,26 @@ public:
     string generaCodigo()
     {
         stringstream s;
-        s << "push " << simbolo << der->getSimbolo() << ";" << endl;
+        if(simbolo == "+")
+        {
+            s << der->generaCodigo();
+        }
+        else if(simbolo == "-")
+        {
+            if(der->dataType() == 'i')
+                s << "push " << simbolo << der->getSimbolo() << ";" << endl;
+            else if(der->dataType() == 'o')
+            {
+                s << der->generaCodigo();
+                s << "pop eax;" << endl;
+                s << "mov ebx, -1;" << endl;
+                s << "imul ebx" << endl;
+                s << "push eax;" << endl;
+            }
+        }
+        else
+            s << ";Operación desconocida" << endl;
+
         return s.str();
     }
 
@@ -394,23 +457,17 @@ public:
     {
         der->semantico();
 
-        if(der->getTipo() == 'i')
-        {
-            tipo = 'i';
-        }
-        else if(der->getTipo() == 'r')
-        {
-            tipo = 'r';
-        }
-        else
-        {
-            tipo = 'e';
-        }
+        tipo = der->getTipo();
     }
 
     char getTipo()
     {
         return tipo;
+    }
+
+    char dataType()
+    {
+        return 'o';
     }
 
 };
@@ -441,12 +498,71 @@ public:
         stringstream s;
         if(tipo == 'i')
         {
-            s << izq->generaCodigo();
-            s << der->generaCodigo();
-            s << "pop ebx;" << endl;
-            s << "pop eax;" << endl;
-            s << "mul ebx;" << endl; //Check
-            s << "push eax;" << endl;
+            if(simbolo == "*")
+            {
+                s << izq->generaCodigo();
+                s << der->generaCodigo();
+                s << "pop ebx;" << endl;
+                s << "pop eax;" << endl;
+                s << "mov edx, 0;" << endl;
+                s << "imul ebx;" << endl;
+                s << "push eax;" << endl;
+            }
+            else if(simbolo == "/")
+            {
+                s << izq->generaCodigo();
+                s << der->generaCodigo();
+                s << "pop ebx;" << endl;
+                s << "pop eax;" << endl;
+                s << "mov edx, 0;" << endl;
+
+                s << "cmp ebx,0;" << endl;
+                s << "jge DIV" << contadorDIV << endl;
+                s << "mov edx, -1;" << endl;                        //Si un operando es negativo se debe poner -1 aqui, si los 2 son positivos se pone 0
+                s << "DIV" << contadorDIV << ": " << endl;
+                contadorDIV++;
+
+                s << "cmp eax,0;" << endl;
+                s << "jge DIV" << contadorDIV << endl;
+                s << "mov edx, -1;" << endl;                        //Si un operando es negativo se debe poner -1 aqui, si los 2 son positivos se pone 0
+                s << "DIV" << contadorDIV << ": " << endl;
+                contadorDIV++;
+
+                s << "idiv ebx;" << endl;
+                s << "push eax;" << endl;
+            }
+            else if(simbolo == "%")
+            {
+                s << izq->generaCodigo();
+                s << der->generaCodigo();
+                s << "pop ebx;" << endl;
+                s << "pop eax;" << endl;
+                s << "mov edx, 0;" << endl;
+
+                s << "cmp ebx,0;" << endl;
+                s << "jge DIV" << contadorDIV << endl;
+                s << "mov edx, -1;" << endl;                        //Si un operando es negativo se debe poner -1 aqui, si los 2 son positivos se pone 0
+                s << "DIV" << contadorDIV << ": " << endl;
+                contadorDIV++;
+
+                s << "cmp eax,0;" << endl;
+                s << "jge DIV" << contadorDIV << endl;
+                s << "mov edx, -1;" << endl;                        //Si un operando es negativo se debe poner -1 aqui, si los 2 son positivos se pone 0
+                s << "DIV" << contadorDIV << ": " << endl;
+                contadorDIV++;
+
+                s << "idiv ebx;" << endl;
+
+                s << "cmp edx,0;" << endl;
+                s << "jge DIV" << contadorDIV << endl;
+                s << "add edx, ebx;" << endl;                        //Si edx es negativo, sumele el modulo
+                s << "DIV" << contadorDIV << ": " << endl;
+                contadorDIV++;
+
+                s << "push edx;" << endl;
+            }
+            else
+                s << ";Operación desconocida" << endl;
         }
         else
             s << ";Solo acepta enteros" << endl;
@@ -476,6 +592,11 @@ public:
     char getTipo()
     {
         return tipo;
+    }
+
+    char dataType()
+    {
+        return 'o';
     }
 
 };
@@ -514,6 +635,24 @@ public:
             return "ERROR";
     }
 
+    string getJumpCondition()
+    {
+        if (simbolo == ">")
+            return "jng ";
+        else if(simbolo == "<")
+            return "jnl ";
+        else if(simbolo == "==")
+            return "jne ";
+        else if(simbolo == "!=")
+            return "je ";
+        else if(simbolo == "<=")
+            return "jnle ";
+        else if(simbolo == ">=")
+            return "jnge ";
+        else
+            return "jmp ";
+    }
+
     string imprime()
     {
         stringstream s;
@@ -529,9 +668,10 @@ public:
         stringstream s;
         s << izq->generaCodigo();
         s << der->generaCodigo();
-        s << "pop eax;" << endl;
         s << "pop ebx;" << endl;
+        s << "pop eax;" << endl;
         s << "cmp eax, ebx;" << endl;//Deja banderas de comparación
+        s << getJumpCondition();
         return s.str();
     }
 
@@ -765,6 +905,41 @@ public:
         tipo = cond->getTipo();
     }
 
+    string generaCodigo()
+    {
+        pSentencia temp;
+        stringstream s;
+        if(tipo == 'i')
+        {
+            s << cond->generaCodigo() << "SI" << contadorIF << endl;
+
+            temp = bloque;
+            while(temp != NULL)
+            {
+                s << temp->generaCodigo();
+                temp = temp->siguiente;
+            }
+
+            s << "jmp FINSI" << contadorIF << endl;
+            s << "SI" << contadorIF << ": " << endl;
+
+            temp = otro;
+            while(temp != NULL)
+            {
+                s << temp->generaCodigo();
+                temp = temp->siguiente;
+            }
+
+            s << "FINSI" << contadorIF << ": " << endl;
+
+            contadorIF++;
+        }
+        else //Empezar por aqui si se quieren integrar numeros reales o cadenas a la condición
+            s << ";Solo compara enteros" << endl;
+
+        return s.str();
+    }
+
     pSentencia getBloque()
     {
         return bloque;
@@ -822,7 +997,32 @@ public:
         return s.str();
     }
 
+    string generaCodigo()
+    {
+        pSentencia temp;
+        stringstream s;
+        if(tipo == 'i')
+        {
+            s << "MIENTRAS" << contadorWHILE << ": " << endl;
+            s << cond->generaCodigo() << "FINMIENTRAS" << contadorWHILE << endl;
 
+            temp = bloque;
+            while(temp != NULL)
+            {
+                s << temp->generaCodigo();
+                temp = temp->siguiente;
+            }
+
+            s << "jmp MIENTRAS" << contadorWHILE << endl;
+            s << "FINMIENTRAS" << contadorWHILE << ": " << endl;
+
+            contadorWHILE++;
+        }
+        else //Empezar por aqui si se quieren integrar numeros reales o cadenas a la condición
+            s << ";Solo compara enteros" << endl;
+
+        return s.str();
+    }
 
     void semantico()
     {

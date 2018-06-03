@@ -252,24 +252,9 @@ class Sintactico {
 
         void cond() {
             cout << "Condicion" << endl << endl;
-            if(lexicParser.getCurrentType() == OPERADOR_NEGACION) {
-                lexicParser.clean();
-                lexicParser.getNextSymbol();
-                condF();
-            }
-            else if(lexicParser.getCurrentType() == ABRE_PARENTESIS) {
-                lexicParser.clean();
-                lexicParser.getNextSymbol();
-                cond();
-                checkType(CIERRA_PARENTESIS);
-                cond2();
-            }
-            else if(lexicParser.getCurrentType() == DIGITO || lexicParser.getCurrentType() == REAL || lexicParser.getCurrentType() == IDENTIFICADOR) {
-                lexicParser.clean();
-                lexicParser.getNextSymbol();
-                B();
-                cond2();
-            }
+            BFollow();
+            checkType(OPERADOR_RELACIONAL);
+            BFollow();
 //            else { // BORRAR ESTE ELSE SI LA GRMATICA PERMITE CONDICION VACIA
 //                std::string errorStr;//error
 //                errorStr = "Tipo no aceptado en la gramatica.\n";

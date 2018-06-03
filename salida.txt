@@ -9,40 +9,95 @@ option casemap:none
 
 .data
 .data?
-_a SDWORD ?
-_c SDWORD ?
+_nc SDWORD ?
+_B2U SDWORD ?
+_k SDWORD ?
+_V975 SDWORD ?
+_gq7 SDWORD ?
+_p3 SDWORD ?
+_XQX16 SDWORD ?
 .code
 inicio:
 
-push 5;
-pop _a;
-;Solo asigna enteros
-push _a;
+push 9;
+pop _nc;
+push 73;
+pop _B2U;
+push 3;
+pop _k;
+push 8;
+pop _V975;
+push 68;
+pop _gq7;
+push 78;
+pop _p3;
+push 1;
+push _p3;
+pop ebx;
+pop eax;
+sub eax, ebx;
+push eax;
 push 2;
 pop ebx;
 pop eax;
+cmp eax, ebx;
+jng SI0
+push 28;
+push _V975;
+pop ebx;
+pop eax;
 add eax, ebx;
 push eax;
-pop eax
-print str$(eax),10;
-push 34;
-pop _a;
 push 7;
-push 3;
+push _p3;
+pop ebx;
+pop eax;
+mov edx, 0;
+imul ebx;
+push eax;
 pop ebx;
 pop eax;
 add eax, ebx;
 push eax;
-pop _c;
-push _c;
-push 3;
-pop ebx;
 pop eax;
-mul ebx;
+mov ebx, -1;
+imul ebx
 push eax;
 pop eax
 print str$(eax),10;
-print chr$("Kappa"),10;
+push 19;
+push 41;
+pop ebx;
+pop eax;
+sub eax, ebx;
+push eax;
+push _V975;
+pop ebx;
+pop eax;
+sub eax, ebx;
+push eax;
+pop _XQX16;
+jmp FINSI0
+SI0: 
+FINSI0: 
+push _XQX16;
+push 5;
+push _XQX16;
+pop ebx;
+pop eax;
+sub eax, ebx;
+push eax;
+push 69;
+pop ebx;
+pop eax;
+add eax, ebx;
+push eax;
+pop ebx;
+pop eax;
+sub eax, ebx;
+push eax;
+pop eax
+print str$(eax),10;
 exit
 
 end inicio

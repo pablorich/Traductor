@@ -168,7 +168,7 @@ class ArbolSintactico {
             }
             else
             {
-                    pSentencia dummy = new Sentencia();
+                    pSentencia dummy = NULL;
                     return dummy;
             }
         }
@@ -187,6 +187,14 @@ class ArbolSintactico {
                         lexicParser.clean();
                         lexicParser.getNextSymbol();
 
+                        if(lexicParser.getCurrentType() == OPERADOR_ARITMETICO_ALTA_PRIORIDAD)
+                        {
+                                string k = lexicParser.getCurrentSymbol();
+                                lexicParser.clean();
+                                lexicParser.getNextSymbol();
+                                b = Alta(b,k);
+                        }
+
                         return b;
                 }
                 else if(lexicParser.getCurrentType() == ABRE_PARENTESIS)
@@ -195,6 +203,13 @@ class ArbolSintactico {
                         lexicParser.getNextSymbol();
                         b = ExpA();
                         checkType(CIERRA_PARENTESIS);
+                        if(lexicParser.getCurrentType() == OPERADOR_ARITMETICO_ALTA_PRIORIDAD)
+                        {
+                                string k = lexicParser.getCurrentSymbol();
+                                lexicParser.clean();
+                                lexicParser.getNextSymbol();
+                                b = Alta(b,k);
+                        }
                         return b;
                 }
                 else
@@ -389,28 +404,9 @@ class ArbolSintactico {
                 }
         }
 
-        pSentencia IF() {
-                pCondicion a;
-                pSentencia b = new Sentencia(),c;
-                checkType(ABRE_PARENTESIS);
-                a = cond();
-                checkType(CIERRA_PARENTESIS);
-                if(lexicParser.getCurrentType() == ABRE_LLAVE) {
-                        lexicParser.clean();
-                        lexicParser.getNextSymbol();
-                        SGen(b);
-                        checkType(CIERRA_LLAVE);
-                }
-                else
-                        b = A();
-                c = opt();
-                pSentencia s = new SI(a,b,c);
-                return s;
-        }
-
         pSentencia opt() {
             if(lexicParser.getCurrentType() == SENTENCIA_ELSE) {
-                pSentencia a = new Sentencia();
+                pSentencia a = NULL;
                 lexicParser.clean();
                 lexicParser.getNextSymbol();
                 if(lexicParser.getCurrentType() == ABRE_LLAVE) {
@@ -424,7 +420,7 @@ class ArbolSintactico {
                 return a;
             }
             else{
-                pSentencia n = new Sentencia();
+                pSentencia n = NULL;
                 return n;
             }
         }
@@ -445,10 +441,28 @@ class ArbolSintactico {
                 return c;
         }
 
+        pSentencia IF() {
+                pCondicion a;
+                pSentencia b = NULL, c;
+                checkType(ABRE_PARENTESIS);
+                a = cond();
+                checkType(CIERRA_PARENTESIS);
+                if(lexicParser.getCurrentType() == ABRE_LLAVE) {
+                        lexicParser.clean();
+                        lexicParser.getNextSymbol();
+                        SGen(b);
+                        checkType(CIERRA_LLAVE);
+                }
+                else
+                        b = A();
+                c = opt();
+                pSentencia s = new SI(a,b,c);
+                return s;
+        }
 
         pSentencia WHILE() {
                 pCondicion a;
-                pSentencia b = new Sentencia();
+                pSentencia b = NULL;
                 checkType(ABRE_PARENTESIS);
                 a = cond();
                 checkType(CIERRA_PARENTESIS);
