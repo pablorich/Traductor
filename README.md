@@ -1,6 +1,8 @@
 # Traductor
 Proyecto para la materia traductores de lenguajes 2 UDG CUCEI
 
+Se honesto contigo, no vas a aprender nada si solo copias el proyecto y lo entregas. porfa no lo hagas.
+
 La gramatica que acepta de entrada son las siguientes sentencias
 
 Asignacion:
